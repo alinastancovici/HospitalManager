@@ -15,5 +15,8 @@ public class CreatePatientDto {
     @NotNull(message = "Age can't be null")
     private Integer age;
 
+    @NotNull(message = "PhoneNumber can't be null")
+    @Pattern(regexp = "[0][0-9]{9}")
+    private String phoneNumber;
 
 }

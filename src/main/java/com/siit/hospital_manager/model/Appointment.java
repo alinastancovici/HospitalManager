@@ -1,6 +1,8 @@
 package com.siit.hospital_manager.model;
 
 import com.siit.hospital_manager.model.dto.AppointmentDto;
+import com.siit.hospital_manager.model.dto.CreateAppointmentDto;
+import com.siit.hospital_manager.model.dto.CreatePatientDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -25,6 +27,11 @@ public class Appointment {
                 .build();
     }
     public Appointment() {
+    }
+
+    public Appointment(CreateAppointmentDto createAppointmentDto, Patient patient) {
+        this.date = createAppointmentDto.getDate();
+        this.patient = patient;
     }
 
     public Appointment(Integer id, LocalDateTime date, Patient patient) {
