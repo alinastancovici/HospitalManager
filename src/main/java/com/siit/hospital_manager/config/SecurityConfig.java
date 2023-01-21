@@ -23,7 +23,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests()
                 .requestMatchers("/", "/public", "/user").permitAll()
-                .requestMatchers("/mvc/patient/viewAll").hasRole("PATIENT")
+                .requestMatchers("/mvc/patient/viewAll").hasAnyRole("PATIENT","ADMIN")
+                .requestMatchers("/mvc/patient/create").hasRole("ADMIN")
                 .and()
                 .formLogin();
         return http.build();
