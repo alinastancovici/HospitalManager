@@ -2,11 +2,13 @@ package com.siit.hospital_manager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -17,6 +19,5 @@ public class User {
     private String password;
     private boolean isActive;
     private String roles;
-
 
 }

@@ -1,8 +1,6 @@
 package com.siit.hospital_manager.model;
 
 import com.siit.hospital_manager.model.dto.AppointmentDto;
-import com.siit.hospital_manager.model.dto.CreateAppointmentDto;
-import com.siit.hospital_manager.model.dto.CreatePatientDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -18,12 +16,17 @@ public class Appointment {
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
+
     public AppointmentDto toDto(){
         return AppointmentDto
                 .builder()
                 .id(id)
                 .date(date)
                 .patient(patient)
+                .doctor(doctor)
                 .build();
     }
     public Appointment() {

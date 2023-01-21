@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital manager</title>
+</head>
+<body>
+<div></div>
+
+<h2 th:if="${isAdmin}" >Admin dashboard</h2>
+<h2 th:if="${isDoctor}" >Doctor dashboard</h2>
+<h2 th:if="${isPatient}" >Patient dashboard</h2>
+
+
+<button  th:if="${isPatient}" onclick="window.location.href='/appointment/findAllByPatient';">
+   View my appointments
+</button>
+
+
+</body>
+</html>
