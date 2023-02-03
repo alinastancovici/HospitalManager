@@ -1,7 +1,6 @@
 package com.siit.hospital_manager.controller;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,5 @@ public class HomePageController {
         model.addAttribute("message", "Hospital Manager v1");
         return "dashboard/dashboard";
     }
-
-
 
 }

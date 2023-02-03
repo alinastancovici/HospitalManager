@@ -4,6 +4,7 @@ import com.siit.hospital_manager.model.dto.AppointmentDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "appointments")
@@ -12,19 +13,22 @@ public class Appointment {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     private LocalDateTime date;
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
     public AppointmentDto toDto(){
+        String dateFormat = "MMM dd HH:mm";
+        String formattedDate = date.format(DateTimeFormatter.ofPattern(dateFormat));
+
         return AppointmentDto
                 .builder()
                 .id(id)
-                .date(date)
+                .date(formattedDate)
                 .patient(patient)
                 .doctor(doctor)
                 .build();

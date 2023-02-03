@@ -13,11 +13,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/patient")
-public class PatientController {
+public class PatientApiController {
 
     private final PatientService patientService;
 
-    public PatientController(PatientService patientService) {
+    public PatientApiController(PatientService patientService) {
         this.patientService = patientService;
     }
 

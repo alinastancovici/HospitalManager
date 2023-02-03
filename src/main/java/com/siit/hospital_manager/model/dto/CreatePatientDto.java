@@ -3,10 +3,12 @@ package com.siit.hospital_manager.model.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 @Data
+@Builder
 public class CreatePatientDto {
     @NotNull(message = "Name can not be null")
     @Pattern(regexp = "[A-Z][a-z]{1,15}+ [A-Z][a-z]{1,15}+")

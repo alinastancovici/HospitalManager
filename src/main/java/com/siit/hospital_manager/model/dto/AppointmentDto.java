@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class AppointmentDto {
     private Integer id;
-    private LocalDateTime date;
+    private String date;
     private Patient patient;
     private Doctor doctor;
 

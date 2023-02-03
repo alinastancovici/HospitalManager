@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -35,10 +37,11 @@ public class PatientService {
     }
 
 
+    @Transactional
     public Integer createPatient(CreatePatientDto createPatientDto) {
 
         userRepository.findByUserName(createPatientDto.getUserName()).ifPresent(user -> {
-                    throw new BusinessException(HttpStatus.BAD_REQUEST, "Patient already exists!");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Patient already exists!");
                 }
         );
 
