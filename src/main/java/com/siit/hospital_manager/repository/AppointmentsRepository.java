@@ -1,6 +1,7 @@
 package com.siit.hospital_manager.repository;
 
 import com.siit.hospital_manager.model.Appointment;
+import com.siit.hospital_manager.model.Doctor;
 import com.siit.hospital_manager.model.Patient;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
@@ -16,5 +17,9 @@ public interface AppointmentsRepository extends JpaRepository<Appointment, Integ
     @Modifying
     @Query(value = "DELETE FROM appointments where id = :id", nativeQuery = true)
     void deleteByIdNativeQuery(@Param("id") Integer id);
+
+    List<Appointment> findAllByDoctor(Doctor doctor);
+
+    Appointment findAppointmentById(Integer id);
 
 }

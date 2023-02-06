@@ -10,8 +10,8 @@
 <div class="w-25 mx-auto">
     <br/>
     <h2 class="text-center" th:if="${isAdmin}">Admin dashboard</h2>
-    <h2 th:if="${isDoctor}">Doctor dashboard</h2>
-    <h2 th:if="${isPatient}">Patient dashboard</h2>
+    <h2 class="text-center" th:if="${isDoctor}">Doctor dashboard</h2>
+    <h2 class="text-center" th:if="${isPatient}">Patient dashboard</h2>
 
 
     <div class="row d-flex content-center">
@@ -24,6 +24,12 @@
         <button class="btn btn-primary" th:if="${isPatient}" onclick="window.location.href='/appointment/create';">
             Create an appointment
         </button>
+    </div>
+    </div>
+    <div class="row d-flex content-center">
+    <button class="btn btn-primary" th:if="${isDoctor}" onclick="window.location.href='/appointment/findAllByDoctor';">
+        View my appointments
+    </button>
     </div>
     <br/><br/>
     <div class="row d-flex content-center">

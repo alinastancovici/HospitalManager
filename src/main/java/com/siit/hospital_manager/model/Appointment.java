@@ -2,17 +2,20 @@ package com.siit.hospital_manager.model;
 
 import com.siit.hospital_manager.model.dto.AppointmentDto;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Entity
 @Table(name = "appointments")
+@Builder
 public class Appointment {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
-    private LocalDateTime date;
+    private Date date;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "patient_id", nullable = false)
     private Patient patient;
@@ -21,30 +24,29 @@ public class Appointment {
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
 
+    private AppointmentStatus appointmentStatus;
     public AppointmentDto toDto(){
-        String dateFormat = "MMM dd HH:mm";
-        String formattedDate = date.format(DateTimeFormatter.ofPattern(dateFormat));
+//        String dateFormat = "MMM dd HH:mm";
+//        String formattedDate = date.format(DateTimeFormatter.ofPattern(dateFormat));
 
         return AppointmentDto
                 .builder()
                 .id(id)
-                .date(formattedDate)
+                .date(date)
                 .patient(patient)
                 .doctor(doctor)
+                .appointmentStatus(appointmentStatus)
                 .build();
     }
     public Appointment() {
     }
 
-    public Appointment(CreateAppointmentDto createAppointmentDto, Patient patient) {
-        this.date = createAppointmentDto.getDate();
-        this.patient = patient;
-    }
-
-    public Appointment(Integer id, LocalDateTime date, Patient patient) {
+    public Appointment(Integer id, Date date, Patient patient, Doctor doctor, AppointmentStatus appointmentStatus) {
         this.id = id;
         this.date = date;
         this.patient = patient;
+        this.doctor = doctor;
+        this.appointmentStatus = appointmentStatus;
     }
 
     public Integer getId() {
@@ -55,11 +57,11 @@ public class Appointment {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -69,5 +71,13 @@ public class Appointment {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public AppointmentStatus getAppointmentStatus() {
+        return appointmentStatus;
+    }
+
+    public void setAppointmentStatus(AppointmentStatus appointmentStatus) {
+        this.appointmentStatus = appointmentStatus;
     }
 }
