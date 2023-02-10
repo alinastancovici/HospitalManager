@@ -4,7 +4,9 @@ import com.siit.hospital_manager.exception.BusinessException;
 import com.siit.hospital_manager.model.*;
 import com.siit.hospital_manager.model.dto.AppointmentDto;
 import com.siit.hospital_manager.model.dto.CreateAppointmentDto;
+import com.siit.hospital_manager.model.dto.UpdateAppointmentDto;
 import com.siit.hospital_manager.repository.*;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -53,12 +55,12 @@ public class AppointmentService {
                 .toList();
 
     }
-    public List<AppointmentDto> findAllByDoctor(String doctorName) {
+    public List<AppointmentDto> findAllByDoctorAndStatus(String doctorName, AppointmentStatus appointmentStatus) {
         Doctor doctor = doctorRepository.findByName(doctorName).orElseThrow(
                 () -> new BusinessException(HttpStatus.NOT_FOUND, "Doctor not found")
         );
 
-        List<Appointment> appointments = appointmentsRepository.findAllByDoctor(doctor);
+        List<Appointment> appointments = appointmentsRepository.findAllByDoctorAndAppointmentStatus(doctor, appointmentStatus);
 
         return appointments.stream()
                 .map(Appointment::toDto)
@@ -76,6 +78,16 @@ public class AppointmentService {
 
         appointmentsRepository.deleteByIdNativeQuery(appointment.getId());
     }
+    @Transactional
+    public void deleteAppointmentByIdAndDoctor(Integer id, String userName) {
+        Doctor doctor = doctorRepository.findByUserName(userName).orElseThrow(
+                () -> new BusinessException(HttpStatus.NOT_FOUND, "Invalid doctor id"));
+
+        Appointment appointment = appointmentsRepository.findAppointmentByIdAndDoctor(id, doctor).orElseThrow(
+                () -> new BusinessException(HttpStatus.NOT_FOUND, "Appointment not found"));
+
+        appointmentsRepository.deleteByIdNativeQuery(appointment.getId());
+    }
 
     public List<AppointmentDto> create(String name) {
 
@@ -87,7 +99,8 @@ public class AppointmentService {
         Patient patient = patientRepository.findByUserName(createAppointmentDto.getPatientName()).orElseThrow(
                 () -> new BusinessException(HttpStatus.NOT_FOUND, "Invalid patient id"));
 
-        Appointment appointment = Appointment.builder()
+        Appointment appointment = Appointment
+                .builder()
                 .date(createAppointmentDto.getDate())
                 .doctor(doctorRepository.findByName(createAppointmentDto.getDoctorName()).get())
                 .patient(patient)
@@ -99,5 +112,25 @@ public class AppointmentService {
     public Appointment findAppointmentById(Integer id) {
         Appointment appointment = appointmentsRepository.findAppointmentById(id);
         return appointment;
+    }
+
+    public void updateAppointment(UpdateAppointmentDto updateAppointmentDto) {
+        Appointment appointment = appointmentsRepository
+                .findById(updateAppointmentDto.getId())
+                .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "Appointment with id " + updateAppointmentDto.getId() + " not found"));
+
+        if(updateAppointmentDto.getNote() != null) {
+            appointment.setNote(updateAppointmentDto.getNote());
+        }
+
+        if(updateAppointmentDto.getDiagnostic() != null) {
+            appointment.setDiagnostic(updateAppointmentDto.getDiagnostic());
+        }
+        if(updateAppointmentDto.getTreatment() != null) {
+            appointment.setTreatment(updateAppointmentDto.getTreatment());
+        }
+        appointment.setAppointmentStatus(AppointmentStatus.COMPLETED);
+
+        appointmentsRepository.save(appointment);
     }
 }

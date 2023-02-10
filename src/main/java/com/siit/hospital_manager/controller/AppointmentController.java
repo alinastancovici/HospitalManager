@@ -1,9 +1,9 @@
 package com.siit.hospital_manager.controller;
 
+import com.siit.hospital_manager.model.AppointmentStatus;
 import com.siit.hospital_manager.model.dto.AppointmentDto;
 import com.siit.hospital_manager.model.dto.CreateAppointmentDto;
-import com.siit.hospital_manager.model.dto.CreateDoctorDto;
-import com.siit.hospital_manager.model.dto.CreatePatientDto;
+import com.siit.hospital_manager.model.dto.UpdateAppointmentDto;
 import com.siit.hospital_manager.service.AppointmentService;
 import com.siit.hospital_manager.service.DoctorService;
 import jakarta.validation.Valid;
@@ -37,13 +37,20 @@ public class AppointmentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteAppointmentById(@PathVariable Integer id, Principal principal){
-         appointmentService.deleteAppointmentByIdAndPatient(id, principal.getName());
+    public void deleteAppointmentById(@PathVariable Integer id, Principal principal) {
+
+        try {
+            appointmentService.deleteAppointmentByIdAndPatient(id, principal.getName());
+
+        } catch (Exception userNotFoundException) {
+            appointmentService.deleteAppointmentByIdAndDoctor(id, principal.getName());
+        }
     }
+
 
     @GetMapping("/findAllByDoctor")
     public String findAllByDoctor(Model model, Principal principal) {
-        List<AppointmentDto> appointments = appointmentService.findAllByDoctor(principal.getName());
+        List<AppointmentDto> appointments = appointmentService.findAllByDoctorAndStatus(principal.getName(), AppointmentStatus.CONFIRMED);
         model.addAttribute("appointments", appointments);
 
         return "appointment/viewAllAppointmentsByDoctor";
@@ -54,25 +61,37 @@ public class AppointmentController {
         model.addAttribute("appointment", CreateAppointmentDto.builder().build());
         return "appointment/create";
     }
+
     @PostMapping("/submitCreateAppointmentForm")
-    public String submitCreateAppointmentForm (@Valid CreateAppointmentDto createAppointmentDto, BindingResult bindingResult){
+    public String submitCreateAppointmentForm(@Valid CreateAppointmentDto createAppointmentDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             //return to error page if there are validation errors
             return "/validationError";
         }
         try {
             appointmentService.createAppointment(createAppointmentDto);
-        }
-        catch (ResponseStatusException exception){
+        } catch (ResponseStatusException exception) {
             return "/entityExistsError";
         }
         return "redirect:/dashboard";
     }
 
-    @GetMapping("/details/{id}")
+        @GetMapping("/details/{id}")
     public String viewAppointmentById(Model model, @PathVariable Integer id){
         var appointment = appointmentService.findAppointmentById(id);
-        //model.addAttribute("appointment", appointment);
+        model.addAttribute("appointment", appointment);
+
         return "appointment/details";
     }
+
+    @PostMapping(value="/details/{id}")
+    public String updateAppointment(@Valid UpdateAppointmentDto updateAppointmentDto) {
+        appointmentService.updateAppointment(updateAppointmentDto);
+        return "redirect:/dashboard";
+    }
+//    @DeleteMapping("/{id}")
+//    public void deleteAppointmentByIdAndDoctor(@PathVariable Integer id, Principal principal){
+//        appointmentService.deleteAppointmentByIdAndDoctor(id, principal.getName());
+//    }
+
 }

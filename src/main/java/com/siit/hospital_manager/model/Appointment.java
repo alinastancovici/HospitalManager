@@ -2,7 +2,9 @@ package com.siit.hospital_manager.model;
 
 import com.siit.hospital_manager.model.dto.AppointmentDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +13,8 @@ import java.util.Date;
 @Entity
 @Table(name = "appointments")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Appointment {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -23,8 +27,10 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
-
     private AppointmentStatus appointmentStatus;
+    private String note;
+    private String diagnostic;
+    private String treatment;
     public AppointmentDto toDto(){
 //        String dateFormat = "MMM dd HH:mm";
 //        String formattedDate = date.format(DateTimeFormatter.ofPattern(dateFormat));
@@ -37,16 +43,6 @@ public class Appointment {
                 .doctor(doctor)
                 .appointmentStatus(appointmentStatus)
                 .build();
-    }
-    public Appointment() {
-    }
-
-    public Appointment(Integer id, Date date, Patient patient, Doctor doctor, AppointmentStatus appointmentStatus) {
-        this.id = id;
-        this.date = date;
-        this.patient = patient;
-        this.doctor = doctor;
-        this.appointmentStatus = appointmentStatus;
     }
 
     public Integer getId() {
@@ -79,5 +75,29 @@ public class Appointment {
 
     public void setAppointmentStatus(AppointmentStatus appointmentStatus) {
         this.appointmentStatus = appointmentStatus;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getDiagnostic() {
+        return diagnostic;
+    }
+
+    public void setDiagnostic(String diagnostic) {
+        this.diagnostic = diagnostic;
+    }
+
+    public String getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(String treatment) {
+        this.treatment = treatment;
     }
 }

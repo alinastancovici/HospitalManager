@@ -1,6 +1,7 @@
 package com.siit.hospital_manager.repository;
 
 import com.siit.hospital_manager.model.Appointment;
+import com.siit.hospital_manager.model.AppointmentStatus;
 import com.siit.hospital_manager.model.Doctor;
 import com.siit.hospital_manager.model.Patient;
 import org.springframework.data.jpa.repository.*;
@@ -14,12 +15,16 @@ import java.util.Optional;
 public interface AppointmentsRepository extends JpaRepository<Appointment, Integer> {
     List<Appointment> findAllByPatientId(Integer id);
     Optional<Appointment> findAppointmentByIdAndPatient(Integer id, Patient patient);
+
+    Optional<Appointment> findAppointmentByIdAndDoctor(Integer id, Doctor doctor);
     @Modifying
     @Query(value = "DELETE FROM appointments where id = :id", nativeQuery = true)
     void deleteByIdNativeQuery(@Param("id") Integer id);
 
-    List<Appointment> findAllByDoctor(Doctor doctor);
+    List<Appointment> findAllByDoctorAndAppointmentStatus(Doctor doctor, AppointmentStatus appointmentStatus);
 
     Appointment findAppointmentById(Integer id);
+
+
 
 }
