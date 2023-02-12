@@ -1,9 +1,6 @@
 package com.siit.hospital_manager.repository;
 
-import com.siit.hospital_manager.model.Appointment;
-import com.siit.hospital_manager.model.AppointmentStatus;
-import com.siit.hospital_manager.model.Doctor;
-import com.siit.hospital_manager.model.Patient;
+import com.siit.hospital_manager.model.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface AppointmentsRepository extends JpaRepository<Appointment, Integer> {
     List<Appointment> findAllByPatientId(Integer id);
+
     Optional<Appointment> findAppointmentByIdAndPatient(Integer id, Patient patient);
 
     Optional<Appointment> findAppointmentByIdAndDoctor(Integer id, Doctor doctor);
@@ -25,6 +23,6 @@ public interface AppointmentsRepository extends JpaRepository<Appointment, Integ
 
     Appointment findAppointmentById(Integer id);
 
-
+    List<Appointment> findAllByPatientIdAndAppointmentStatus(Integer id, AppointmentStatus appointmentStatus);
 
 }

@@ -1,6 +1,7 @@
 package com.siit.hospital_manager.model.dto;
 
 import com.siit.hospital_manager.model.AppointmentStatus;
+import com.siit.hospital_manager.model.Doctor;
 import lombok.Builder;
 import lombok.Data;
 

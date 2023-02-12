@@ -100,4 +100,12 @@ public class Appointment {
     public void setTreatment(String treatment) {
         this.treatment = treatment;
     }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
 }

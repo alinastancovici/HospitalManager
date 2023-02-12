@@ -25,12 +25,22 @@
             Create an appointment
         </button>
     </div>
+    <div class="row d-flex content-center">
+        <button class="btn btn-primary" th:if="${isPatient}" onclick="window.location.href='/appointment/patientAppointmentHistory';">
+            Appointment History
+        </button>
+    </div>
     </div>
     <div class="row d-flex content-center">
     <button class="btn btn-primary" th:if="${isDoctor}" onclick="window.location.href='/appointment/findAllByDoctor';">
         View my appointments
     </button>
     </div>
+<div class="row d-flex content-center">
+    <button class="btn btn-primary" th:if="${isDoctor}" onclick="window.location.href='/appointment/doctorAppointmentHistory';">
+        Appointment History
+    </button>
+</div>
     <br/><br/>
     <div class="row d-flex content-center">
         <button class="btn btn-primary" th:if="${isAdmin}" onclick="window.location.href='/mvc/doctor/createDoctor';">

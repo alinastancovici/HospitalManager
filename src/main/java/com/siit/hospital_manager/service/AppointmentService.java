@@ -11,12 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -28,8 +23,8 @@ public class AppointmentService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
 
-    public List<AppointmentDto> findAllByPatientId(Integer id) {
-        List<Appointment> appointments = appointmentsRepository.findAllByPatientId(id);
+    public List<AppointmentDto> findAllByPatientId(Integer id, AppointmentStatus appointmentStatus) {
+        List<Appointment> appointments = appointmentsRepository.findAllByPatientIdAndAppointmentStatus(id, appointmentStatus);
 
         return appointments
                 .stream()
@@ -44,12 +39,12 @@ public class AppointmentService {
                 .toList();
     }
 
-    public List<AppointmentDto> findAllByUserName(String userName) {
+    public List<AppointmentDto> findAllByUserName(String userName, AppointmentStatus appointmentStatus) {
         User patient = userRepository.findByUserName(userName).orElseThrow(
                 () -> new BusinessException(HttpStatus.NOT_FOUND, "User not found")
         );
 
-        List<Appointment> appointments = appointmentsRepository.findAllByPatientId(patient.getId());
+        List<Appointment> appointments = appointmentsRepository.findAllByPatientIdAndAppointmentStatus(patient.getId(), appointmentStatus);
         return appointments.stream()
                 .map(Appointment::toDto)
                 .toList();
@@ -102,7 +97,7 @@ public class AppointmentService {
         Appointment appointment = Appointment
                 .builder()
                 .date(createAppointmentDto.getDate())
-                .doctor(doctorRepository.findByName(createAppointmentDto.getDoctorName()).get())
+                .doctor(doctorRepository.findByName(createAppointmentDto.getDoctorName()).orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "There is no doctor with that name")))
                 .patient(patient)
                 .appointmentStatus(AppointmentStatus.CONFIRMED)
                 .build();
